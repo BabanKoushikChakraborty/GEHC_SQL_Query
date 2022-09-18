@@ -1,0 +1,22 @@
+select hr.name,prha.segment1,
+prha.authorization_status,
+prha.attribute12 PPW_CODE,
+prha.approved_date,
+prha.WF_ITEM_TYPE,
+prha.WF_ITEM_key,
+ipp.COMPLIANCE_RELEVANCE,
+ipp.Business_name,
+ipp.Answers
+from apps.gecm_compliance_tbl ipp,
+apps.po_requisition_headers_all prha,
+hr_operating_units hr
+where
+1=1
+--and prha.segment1 = '431110017330'
+and ipp.transaction_id = prha.REQUISITION_HEADER_ID
+and ipp.compliance_name = 'QMS'
+and prha.attribute12 is null
+and hr.organization_id = prha.org_id
+and prha.authorization_status = 'APPROVED'
+and ipp.business_name in ('Surgery (OEC)','Healthcare Systems','Healthcare Digital')
+order by prha.creation_date desc ;

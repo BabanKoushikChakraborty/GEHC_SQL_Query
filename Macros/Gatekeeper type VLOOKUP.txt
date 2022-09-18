@@ -1,0 +1,5 @@
+Gatekeeper Type(Except Sourcing Reviewer)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+=IFERROR(IF(VLOOKUP(K2,'D:\Reports\[MonacoCensus February 200229 for Sourcing IT.xlsx]Full Census'!$A:$A,1,0)=K2,"CYTIVA"),"NON CYTIVA")
+
+Gatekeeper Type(Sourcing Reviewer)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+=IFERROR(IF(VLOOKUP(C2,'D:\Reports\[MonacoCensus February 200229 for Sourcing IT.xlsx]Full Census'!$A:$A,1,0)=C2,"CYTIVA"),"NON CYTIVA")

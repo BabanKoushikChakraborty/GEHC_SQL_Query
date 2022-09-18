@@ -1,0 +1,19 @@
+SSP ORDERS CREATED 2022
+
+SSP RECEIPT REPORT
+
+
+=VLOOKUP(H2,'1'!H:L,5,FALSE)
+
+AUG 2022 MONTHLY HD CLOSE PROCESS
+
+
+[04:50 pm] Bose, Sriparna (GE Healthcare, consultant)
+http://ospcprod.corporate.ge.com/OA_HTML/OA.jsp?OAFunc=OAHOMEPAGE
+
+[04:51 pm] Bose, Sriparna (GE Healthcare, consultant)
+503120892
+
+[04:51 pm] Bose, Sriparna (GE Healthcare, consultant)
+sri1413bose
+

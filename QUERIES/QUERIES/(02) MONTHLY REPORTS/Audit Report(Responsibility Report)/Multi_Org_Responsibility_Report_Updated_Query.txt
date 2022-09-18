@@ -1,0 +1,150 @@
+SELECT DISTINCT        
+--haou.organization_id,  
+--haou.name org_name,  
+substr(haou.attribute13,1, (instr(haou.attribute13,'|') -1)) AS "Org_Business",  
+FRT.RESPONSIBILITY_NAME ,   
+---------------------------------------------------------------------------
+resp.responsibility_key "Responsibility Key",
+---------------------------------------------------------------------------------------
+(select  distinct  fpov.profile_option_value VALUE 
+        from fnd_profile_options fpo, 
+        fnd_profile_option_values fpov, 
+        fnd_profile_options_tl fpot, 
+        fnd_responsibility frsp 
+      where  
+        fpo.profile_option_id = fpov.profile_option_id 
+        
+        AND fpo.profile_option_name = fpot.profile_option_name 
+        
+        AND fpot.user_profile_option_name IN ('GESSS Secure Responsibility') 
+        AND frsp.application_id = fpov.level_value_application_id 
+        
+        AND frsp.responsibility_id = fpov.level_value 
+        
+        AND frsp.responsibility_id =frt.responsibility_id
+        ) Responsibility_Secured,
+------------------------------------------------------------------------------------------------------------------------           
+Fu.User_Name                         AS Oracle_User_Name, 
+--------------------------------------------------------------------------------------------------------------------------
+
+
+
+(select fpov.profile_option_value from fnd_profile_options fpo
+,fnd_profile_option_values fpov
+where fpov.profile_option_id = fpo.profile_option_id
+
+and fpo.profile_option_name = 'GECM_UMX_USER_TYPES'
+and fpov.level_value = fu.user_id
+
+and fpov.level_id = 10004) user_type,   
+----------------------------------------------------------------------------------------------------------------------
+TO_CHAR(FU.START_DATE,'DD-MON-RRRR') AS USER_VALID_FROM,     
+TO_CHAR(FU.END_DATE,'DD-MON-RRRR')   AS ORACLE_USER_END_date,  
+TO_CHAR(FURG.END_DATE,'DD-MON-RRRR') AS USER_RESPONSIBILITY_END_DATE,      
+TO_CHAR(FU.LAST_LOGON_DATE,'DD-MON-RRRR') AS LAST_LOGON_DATE,  
+FU.EMAIL_ADDRESS  ,       
+PPF.EMPLOYEE_NUMBER "SSO ID",        
+TO_CHAR(FU.CREATION_DATE,'DD-MON-RRRR') CREATION_DATE,      
+PPF.FIRST_NAME                       AS EMPLOYEE_FIRST_NAME ,      
+PPF.LAST_NAME                        AS EMPLOYEE_LAST_NAME ,      
+TO_CHAR(PPF.effective_start_date,'DD-MON-RRRR')  AS EMPLOYEE_START_DATE,      
+TO_CHAR(PPF.effective_END_date,'DD-MON-RRRR') AS EMPLOYEE_END_DATE,     
+----------------------------------------------------------------------------------------------------------------------- -----
+PPF.ATTRIBUTE1 EMP_IFG,      
+GDF.ATTRIBUTE40 EMP_IFG_EXT,
+-----------------------------------------------------------------------------------------------------------------------------
+PPF.ATTRIBUTE2 EMP_BUSINESS,      
+-----------------------------------------------------------------------------------------------------------------------------
+PPF.ATTRIBUTE3 EMP_SUBBUSINESS , 
+GDF.ATTRIBUTE42 EMP_SUBBUSINESS_EXT,
+-----------------------------------------------------------------------------------------------------------------------------
+(select hr.business_group_name from hrfv_business_groups hr 
+where ppf.business_group_id=hr.business_group_id(+)) EMP_BUSINESS_GROUP,
+
+
+GDF.ATTRIBUTE38 EMP_GE_INTERNAL_ORGANIZATION,
+------------------------------------------------------------------------------------------------------------------------------------------
+   (select SUBSTR(CONCATENATED_SEGMENTS,1,INSTR(CONCATENATED_SEGMENTS,'.')-1)  
+      from gl_code_combinations_kfv GCC 
+      where GCC.code_combination_id =paa.default_code_comb_id ) AS "Employee BLE",  
+------------------------------------------------------------------------------------------------------------------------------------------    
+ppf.current_employee_flag ,
+-----------------------------------------------------------------------------------------------------------------------------------------      
+  GDF.ATTRIBUTE27   EMP_JOB_FUNCTION_EXT,
+ (select name from per_jobs PS
+        where PS.job_id=paa.job_id ) AS "SSP Job Band",
+ 
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+paa.default_code_comb_id ,  
+c.full_name "Supervisor Full Name" , 
+c.employee_number "Supervisor SSO" ,
+c.email_address "Supervisor EMAIL",
+
+GDF.ATTRIBUTE20 SUPERVISOR_SSO_EXT ,
+--(select ppf.email_address from per_all_people_f ppf where GDF.ATTRIBUTE20=ppf.employee_number) "Supervisor EMAIL EXT",
+
+-------------------------------------------------------------------------------------------------------------------------------------        
+         TO_CHAR((SELECT MAX(creation_date)
+		FROM po_requisition_lines_all prl   
+        WHERE prl.to_person_id=ppf.person_id 
+        ),'DD-MON-RRRR')AS "Last Req Date(Requester)",    
+	   --------------------------------------------------------------------------------------------------------------------------------------       
+       TO_CHAR((SELECT MAX(creation_date)
+		FROM po_requisition_headers_all prh  
+        WHERE prh.preparer_id =ppf.person_id  
+       ),'DD-MON-RRRR')AS "Last Req Date(preparer)",  
+	   -----------------------------------------------------------------------------------------------------------------------------------------        
+	   TO_CHAR((SELECT MAX(action_date)   
+		FROM po_action_history pah   
+		WHERE action_code='APPROVE'   
+		  AND ppf.person_id =pah.employee_id  
+	   ),'DD-MON-RRRR') AS "Last Req Date(Approver)",
+	   ---------------------------------------------------------------------------------------------------------------------------------------
+	  TO_CHAR((SELECT MAX(creation_date)
+		FROM po_distributions_all pd   
+		WHERE pd.deliver_to_person_id=ppf.person_id  
+       ),'DD-MON-RRRR')AS "Last PO Date (requestor)" 
+      -------------------------------------------------------------------------------------------------------------------------------      
+FROM 
+APPS.FND_USER FU,    
+APPS.FND_USER_RESP_GROUPS_DIRECT FURG,    
+APPS.FND_RESPONSIBILITY_TL FRT,  
+(select responsibility_id,responsibility_key from fnd_responsibility where   
+(END_DATE IS NULL OR END_DATE>=trunc(SYSDATE))) resp,   
+APPS.PER_ALL_PEOPLE_F PPF,           
+apps.fnd_profile_options fpo,    
+apps.fnd_profile_option_values fpov,    
+apps.hr_all_organization_units haou,
+(select * from apps.per_all_assignments_f where  nvl(effective_end_date, sysdate+ 1) > sysdate) paa,     
+(select * from apps.per_all_people_f where (sysdate between effective_start_date and effective_END_date))c,
+ (select * from gecm_dff_ext gdf where gdf.primary_table   ='PER_ALL_PEOPLE_F' ) gdf,
+ apps.per_security_organizations pso 
+--------------------------------------------------------------------------------------------------------------------------------- 
+WHERE 
+ ppf.employee_number   =gdf.primary_key(+)
+ AND FU.user_id     = furg.user_id    
+and trunc(NVL(FU.END_date,SYSDATE+1))>=SYSDATE
+and trunc(NVL(FURG.END_date,SYSDATE+1))>=SYSDATE
+AND Ppf.Person_Id(+) = Fu.Employee_Id    
+AND furg.responsibility_id = frt.responsibility_id    
+AND NVL(furg.end_date,sysdate + 1) > SYSDATE    
+AND SYSDATE BETWEEN NVL(ppf.effective_start_date,SYSDATE - 1) AND NVL(ppf.effective_end_date,SYSDATE + 1)    
+and PPF.person_id = PAA.person_id(+) 
+and paa.supervisor_id = c.person_id (+) 
+and frt.responsibility_id=resp.responsibility_id
+AND FRT.LANGUAGE   = USERENV('LANG')    
+AND pso.organization_id=haou.organization_id 
+--AND FPO.PROFILE_OPTION_NAME  ='XLA_MO_SECURITY_PROFILE_LEVEL'
+--AND fpov.profile_option_value= to_char(pso.security_profile_id)
+AND fpo.application_id        = fpov.application_id    
+AND Fpov.Profile_Option_Id    = Fpo.Profile_Option_Id  
+AND Fpov.Level_Value          = Frt.Responsibility_Id   
+AND FPOV.level_id=10003
+AND NOT EXISTS( select 1 from apps.fnd_profile_option_values a,apps.fnd_profile_options b
+   where a.profile_option_id = b.profile_option_id
+   and   b.PROFILE_OPTION_NAME    ='ORG_ID'
+   and   a.level_value = frt.responsibility_id)
+--   and FRT.RESPONSIBILITY_NAME like '%Workflow User Web (New)%'
+and substr(haou.attribute13,1, (instr(haou.attribute13,'|') -1)) in ('Healthcare')
+order by  FRT.RESPONSIBILITY_NAME,Fu.User_Name; 

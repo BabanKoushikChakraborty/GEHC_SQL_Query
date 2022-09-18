@@ -1,0 +1,113 @@
+select distinct
+pvs.org_id,
+(SELECT NAME
+FROM APPS.HR_ALL_ORGANIZATION_UNITS
+WHERE PVS.ORG_ID = ORGANIZATION_ID) OU_NAME,
+pv.segment1 as GSL6,
+pv.segment1||pvs.attribute14 as GSL9,
+ppl.employee_number "Gatekeeper SSO",
+ppl.full_name "Gatekeeper Name",
+pvs.attribute2 "Threshold",
+pv.vendor_name as Supplier_Name,
+pv.VENDOR_NAME_ALT as Alternative_Name,
+pv.NUM_1099 as Tax_player_id,
+pvs.attribute4 "Highrisk Classification",
+PVS.INVOICE_CURRENCY_CODE,
+PVS.PAYMENT_CURRENCY_CODE,
+pvs.supplier_notif_method as PO_TRANSMISSION_METHOD,
+pvc.first_name as contact_first_name,
+pvc.middle_name as contact_middle_name,
+pvc.last_name as contact_last_name,
+pv.TYPE_1099 as Income_Tax_type,
+pv.FEDERAL_REPORTABLE_FLAG,
+--(select location_code from hr_locations_all where location_id = pvs.ship_to_location_id) SHIP_TO,
+--(select location_code from hr_locations_all where location_id = pvs.bill_to_location_id) BILL_TO,
+to_char (pv.CREATION_DATE,'DD-MON-YYYY') as Supp_Creation_date,
+to_char (pvs.CREATION_DATE,'DD-MON-YYYY') as site_Creation_date,
+to_char(pv.END_DATE_ACTIVE, 'DD-MON-YYYY') as Supplier_Inactive_Date,
+to_char(pvs.inactive_date, 'DD-MON-YYYY') as Site_Inactive_Date,
+to_char (pv.LAST_UPDATE_DATE,'DD-MON-YYYY') as Supp_update_date,
+to_char (pvs.LAST_UPDATE_DATE,'DD-MON-YYYY') as site_update_date,
+pvs.attribute14 as Site_Code,
+pvs.vendor_site_code as Site_Name,
+pvs.VENDOR_SITE_CODE_ALT ,
+pvs.ADDRESS_LINE1 ,
+pvs.ADDRESS_LINE2 ,
+pvs.ADDRESS_LINE3 ,
+pvs.LANGUAGE,
+pvs.CITY ,
+pvs.STATE ,
+pvs.PROVINCE ,
+pvs.country ,
+pvs.ZIP,
+pvs.email_address as contact_email,
+pvs.area_code as phone_area_code,
+pvs.phone,
+pvs.fax_area_code,
+pvs.fax,
+pvs.DUNS_NUMBER,
+pvs.ATTRIBUTE7 as TAX_Registration_Number,
+pvs.VAT_REGISTRATION_NUM,
+pvs.Vat_Code,
+APT.name as PAYMENT_TERMS,
+pvs.PAYMENT_METHOD_LOOKUP_CODE,
+pvs.attribute12 PAYMENT_SYSTEM,
+pvs.PAY_DATE_BASIS_LOOKUP_CODE,
+PVS.ATTRIBUTE1 as PO_TRANMISSION_VIA,
+pvs.ATTRIBUTE11 as PO_email,
+pvs.REMITTANCE_EMAIL as REMITTANCE_EMAIL,
+ieppm.payment_method_code as PAYMENT_METHOD,
+
+pvs.vendor_id,
+pvs.vendor_site_id,
+--pvs.AWT_GROUP_ID,
+--pvs.PAY_SITE_FLAG,
+--Pvs.HOLD_REASON,
+--pvs.HOLD_ALL_PAYMENTS_FLAG,
+
+
+
+WHTCOL.name as WHT_NAME
+from
+apps.po_vendors pv,
+apps.po_vendor_sites_all pvs,
+apps.ap_terms apt,
+apps.AP_AWT_GROUPS WHTCOL,
+apps.PER_PEOPLE_F ppl,
+apps.PO_VENDOR_CONTACTS pvc,
+APPS.IBY_EXTERNAL_PAYEES_ALL EP,
+apps.iby_ext_party_pmt_mthds ieppm
+
+
+
+
+
+where
+pv.vendor_id=pvs.vendor_id
+AND pvs.terms_id=apt.term_id(+)
+AND pvs.awt_group_id=WHTCOL.group_id(+)
+and ep.payee_party_id = pv.party_id
+and ep.supplier_site_id = pvs.vendor_site_id
+and ep.org_id = pvs.org_id
+and ep.ext_payee_id = ieppm.ext_pmt_party_id(+)
+and pvs.vendor_site_id = pvc.vendor_site_id(+)
+and ppl.person_id=pvs.attribute1
+and (trunc(pv.END_DATE_ACTIVE)> sysdate or trunc(pv.END_DATE_ACTIVE) is null )
+and (trunc(pvs.inactive_date)> sysdate or trunc(pvs.inactive_date) is null )
+--and upper(pvs.HOLD_ALL_PAYMENTS_FLAG)='Y'
+--and (trunc(pvs.inactive_date) > sysdate or pvs.inactive_date is null)
+--and pvs.org_id = '9982'
+--and pv.segment1 = 'N74021'
+and
+(
+(trunc(pv.CREATION_DATE) between to_date('14022022','DDMMYYYY') and to_date('18022022','DDMMYYYY')) OR --supp crtd
+(trunc(pvs.CREATION_DATE) between to_date('14022022','DDMMYYYY') and to_date('18022022','DDMMYYYY')) --site crtd'
+)
+order by 1,2,3
+
+
+
+
+
+--AND EP.SUPPLIER_SITE_ID(+) = PVS.VENDOR_SITE_ID
+--and ep.ext_payee_id = ieppm.ext_pmt_party_id(+)

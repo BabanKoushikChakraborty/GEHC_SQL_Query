@@ -1,0 +1,27 @@
+Date for closing Required By Requestor>>>>
+
+=IFNA(VLOOKUP(F2,DNC!A:C,2,FALSE),"NA")
+
+Reason>>>>>>>>>>>>>>>>>>>>>
+
+=IFNA(VLOOKUP(F2,DNC!A:C,3,False),"NA")
+
+
+
+
+
+AUTO PO CLOSE VLOOKUPS>>>>>>>>>>>>>>>
+
+=NOT(ISNA(VLOOKUP(H318,POs!M:M,1,FALSE)))
+
+=VLOOKUP(J2,[Book1]PO!$K:$AH,2,FALSE) 
+
+
+
+
+
+Open PO User type BIOPHARMA or NON-BIOPHARMA VLOOKUP>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+=IFERROR(IF(VLOOKUP(O2,'[MonacoCensus February 200229 for Sourcing IT.xlsx]Full Census'!$A:$A,1,0)=O2,"CYTIVA"),"NON CYTIVA")
+
+=IFERROR(IF(VLOOKUP(O2,'E:\[MonacoCensus February 200229 for Sourcing IT.xlsx]Full Census'!$A:$A,1,0)=O2,"CYTIVA"),"NON CYTIVA")

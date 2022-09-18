@@ -1,0 +1,1 @@
+select pha.attribute3,pha.attribute13 from apps.PO_HEADERS_ALL PHA

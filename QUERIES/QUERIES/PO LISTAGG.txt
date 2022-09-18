@@ -1,0 +1,24 @@
+ ,(select listagg('PO#:'||pr.segment1||';Creation Date:'||to_date(pr.creation_date,'DD-MON-YY'),' | ')
+      within group (order by pr.segment1)
+      from (select prha.org_id
+      ,pha.segment1
+      ,pha.creation_date
+      ,prha.requisition_header_id
+  from apps.po_requisition_headers_all prha
+      ,APPS.PO_REQ_DISTRIBUTIONS_ALL   PRDA
+      ,APPS.PO_REQUISITION_LINES_ALL   PRLA
+      ,apps.po_headers_all pha
+      ,apps.po_lines_all pla
+      ,apps.po_distributions_all pda
+
+   where PLA.ORG_ID = PHA.ORG_ID
+  and PLA.PO_HEADER_ID = PHA.PO_HEADER_ID
+  and PDA.PO_LINE_ID=PLA.PO_LINE_ID
+  and PDA.ORG_ID=PLA.ORG_ID
+  AND PDA.REQ_DISTRIBUTION_ID = PRDA.DISTRIBUTION_ID(+)
+  AND PDA.ORG_ID = PRDA.ORG_ID(+)
+  AND PRDA.requisition_LINE_id = PRLA.requisition_LINE_id(+)
+  AND PRDA.ORG_ID = PRLA.ORG_ID(+)
+  and PRLA.REQUISITION_HEADER_ID = PRHA.REQUISITION_HEADER_ID(+)
+  AND PRLA.ORG_ID = PRHA.ORG_ID(+))pr
+  where pr.requisition_header_id = prha.requisition_header_id)"PO Details"

@@ -1,0 +1,6 @@
+,to_char((Select RTRIM((XMLAGG(XMLELEMENT(e,'SEQUENCE#:'||poa.sequence_num||';ACTION:'||poa.action_code||';APPROVER NAME:'||fu.description||';ACTION DATE:'||poa.action_date ,'|') ORDER BY sequence_num).EXTRACT ('//text()')).getclobval(),',') approval_list
+from apps.po_action_history poa,
+     apps.fnd_user fu
+     where poa.object_id           = prha.requisition_header_id
+     and poa.employee_id   = fu.employee_id
+     and poa.object_type_code = 'REQUISITION')) latest_approver2

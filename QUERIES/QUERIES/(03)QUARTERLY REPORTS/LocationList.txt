@@ -1,0 +1,24 @@
+select 
+hl.INVENTORY_ORGANIZATION_ID,
+(select organization_name from apps.org_organization_definitions ods where ods.organization_id = hl.INVENTORY_ORGANIZATION_ID) ORG_NAME,
+hl.location_code,  
+       hl.description,        
+       hl.bill_to_site_flag,  
+       hl.ship_to_site_flag,  
+         
+       hl.ADDRESS_STYLE, 
+       hl.postal_code, 
+       hl.address_line_1, 
+       hl.address_line_2, 
+       hl.address_line_3, 
+       hl.TELEPHONE_NUMBER_1, 
+       hl.TELEPHONE_NUMBER_2, 
+       hl.TELEPHONE_NUMBER_3, 
+       hl.COUNTRY,  
+       hl.TOWN_OR_CITY        
+       ,to_char(hl.inactive_date,'DD-MON-YYYY')   Inactive_Date  
+from hr_locations_v hl
+--,apps.hr_operating_units  hro
+where hl.INVENTORY_ORGANIZATION_ID='9064'
+--and hl.INVENTORY_ORGANIZATION_ID =hro.ORGANIZATION_ID 
+order by hl.location_code

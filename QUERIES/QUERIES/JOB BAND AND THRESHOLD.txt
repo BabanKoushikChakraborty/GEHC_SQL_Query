@@ -1,0 +1,10 @@
+select distinct PCG.ORG_ID,
+PCG.control_group_name, 
+PCR. AMOUNT_LIMIT from APPS.PO_CONTROL_GROUPS_ALL PCG, APPS.PO_CONTROL_RULES PCR 
+
+where org_id  = '9114'
+
+AND PCG.CONTROL_GROUP_ID = PCR.CONTROL_GROUP_ID
+AND PCG.control_group_name like '%ASI%'
+--select *  from APPS.PO_CONTROL_GROUPS_ALL PCG
+--select * from APPS.PO_CONTROL_RULES PCR 

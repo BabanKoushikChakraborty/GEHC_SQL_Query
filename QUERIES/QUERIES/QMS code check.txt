@@ -1,0 +1,6 @@
+select * 
+  from apps.gecm_compliance_tbl ipp
+   where  ipp.transaction_id=(select PRHA.requisition_header_id
+                               from apps.po_requisition_headers_all prha
+                               where prha.segment1 = '3581010036156')
+    and ipp.compliance_name = 'QMS'

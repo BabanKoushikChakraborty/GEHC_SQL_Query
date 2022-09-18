@@ -1,0 +1,6 @@
+select flex_value,attribute1
+from fnd_flex_values
+where flex_value_set_id =
+(select flex_value_set_id
+FROM FND_FLEX_VALUE_SETS
+where flex_value_set_name = 'GECM_BIZ_VALUES') and enabled_flag = 'Y' order by flex_value

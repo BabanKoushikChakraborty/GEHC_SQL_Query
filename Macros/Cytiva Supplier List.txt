@@ -1,0 +1,146 @@
+Sub Macro1()
+'
+' Macro1 Macro
+'
+
+'
+    ActiveSheet.Next.Select
+    ActiveSheet.Next.Select
+    ActiveSheet.Next.Select
+    Cells.Select
+    With Selection
+        .HorizontalAlignment = xlLeft
+        .VerticalAlignment = xlBottom
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Columns("C:C").Select
+    Selection.Delete Shift:=xlToLeft
+    Rows("1:1").Select
+    Selection.AutoFilter
+    With ActiveWindow
+        .SplitColumn = 0
+        .SplitRow = 1
+    End With
+    ActiveWindow.FreezePanes = True
+    Selection.Columns.AutoFit
+    Columns("D:D").Select
+    Selection.TextToColumns Destination:=Range("D1"), DataType:=xlDelimited, _
+        TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, Tab:=True, _
+        Semicolon:=False, Comma:=False, Space:=False, Other:=False, FieldInfo _
+        :=Array(1, 1), TrailingMinusNumbers:=True
+    Rows("1:1").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent1
+        .TintAndShade = 0.399975585192419
+        .PatternTintAndShade = 0
+    End With
+    Range("I14").Select
+    ActiveWindow.LargeScroll ToRight:=1
+    ActiveSheet.Range("$A$1:$BN$300000").AutoFilter Field:=13, Criteria1:="="
+    ActiveSheet.Range("$A$1:$BN$300000").AutoFilter Field:=14, Criteria1:="="
+    Range("A1").Select
+    Range(Selection, ActiveCell.SpecialCells(xlLastCell)).Select
+    Selection.Copy
+    ActiveSheet.Previous.Select
+    ActiveSheet.Previous.Select
+    Range("A1").Select
+    ActiveSheet.Paste
+    Rows("1:1").Select
+    Application.CutCopyMode = False
+    Selection.AutoFilter
+    With ActiveWindow
+        .SplitColumn = 0
+        .SplitRow = 1
+    End With
+    ActiveWindow.FreezePanes = True
+    Selection.Columns.AutoFit
+    Range("F18").Select
+    ActiveSheet.Next.Select
+    ActiveSheet.Next.Select
+    Sheets("ACTIVE_SUPPLIERS").Select
+    ActiveWindow.LargeScroll ToRight:=1
+    Columns("M:N").Select
+    Selection.Delete Shift:=xlToLeft
+    Range("A2").Select
+    ActiveSheet.Next.Select
+    ActiveSheet.Next.Select
+    Cells.Select
+    Range("BE1").Activate
+    Selection.AutoFilter
+    Selection.AutoFilter
+    ActiveWindow.ScrollColumn = 56
+    ActiveWindow.ScrollColumn = 55
+    ActiveWindow.ScrollColumn = 54
+    ActiveWindow.ScrollColumn = 53
+    ActiveWindow.ScrollColumn = 52
+    ActiveWindow.ScrollColumn = 51
+    ActiveWindow.ScrollColumn = 49
+    ActiveWindow.ScrollColumn = 47
+    ActiveWindow.ScrollColumn = 46
+    ActiveWindow.ScrollColumn = 43
+    ActiveWindow.ScrollColumn = 40
+    ActiveWindow.ScrollColumn = 39
+    ActiveWindow.ScrollColumn = 35
+    ActiveWindow.ScrollColumn = 34
+    ActiveWindow.ScrollColumn = 32
+    ActiveWindow.ScrollColumn = 31
+    ActiveWindow.ScrollColumn = 30
+    ActiveWindow.ScrollColumn = 29
+    ActiveWindow.ScrollColumn = 26
+    ActiveWindow.ScrollColumn = 25
+    ActiveWindow.ScrollColumn = 19
+    ActiveWindow.ScrollColumn = 18
+    ActiveWindow.ScrollColumn = 16
+    ActiveWindow.ScrollColumn = 15
+    ActiveWindow.ScrollColumn = 14
+    ActiveWindow.ScrollColumn = 13
+    ActiveWindow.ScrollColumn = 12
+    ActiveWindow.ScrollColumn = 11
+    ActiveWindow.ScrollColumn = 10
+    ActiveWindow.ScrollColumn = 11
+    Range("N28602").Select
+    ActiveSheet.Range("$A$1:$BN$300000").AutoFilter Field:=13, Criteria1:="<>"
+    Range("A1").Select
+    Range(Selection, ActiveCell.SpecialCells(xlLastCell)).Select
+    Selection.Copy
+    ActiveSheet.Previous.Select
+    Range("A1").Select
+    ActiveSheet.Paste
+    ActiveCell.SpecialCells(xlLastCell).Select
+    Range("BN7").Select
+    Selection.End(xlToLeft).Select
+    ActiveSheet.Next.Select
+    Application.CutCopyMode = False
+    Range("N1").Select
+    ActiveSheet.Range("$A$1:$BN$300000").AutoFilter Field:=13
+    ActiveSheet.Range("$A$1:$BN$300000").AutoFilter Field:=14, Criteria1:="<>"
+    Range("A94").Select
+    Range(Selection, ActiveCell.SpecialCells(xlLastCell)).Select
+    Selection.Copy
+    ActiveSheet.Previous.Select
+    ActiveSheet.Paste
+    Rows("1:1").Select
+    Application.CutCopyMode = False
+    Selection.AutoFilter
+    With ActiveWindow
+        .SplitColumn = 0
+        .SplitRow = 1
+    End With
+    ActiveWindow.FreezePanes = True
+    Selection.Columns.AutoFit
+    Sheets("Sheet 4").Select
+    ActiveWindow.SelectedSheets.Delete
+    Range("A2").Select
+    ActiveSheet.Previous.Select
+    Range("A2").Select
+    ActiveSheet.Previous.Select
+    Range("A1").Select
+End Sub

@@ -1,0 +1,99 @@
+select
+prha.org_id "Org Id"
+,(select organization_name from apps.org_organization_definitions org where org.organization_id = prha.org_id ) "Org name"
+,prha.segment1 "Requisition#"
+,to_date(prha.creation_date,'DD-MON-YY') "Req_Creation_Date"
+,prha.authorization_status "Req_Authorization_Status"
+,ph.segment1 "PO Number" 
+,to_date(ph.creation_date,'DD-MON-YY') "PO Creation Date" 
+,pl.line_num "PO Line Number"
+,pl.vendor_product_num "Supplier_Item#"
+,pl.item_description "Item Desciption" 
+
+,papf.full_name "Requestor_name"
+  ,papf.employee_number "Requestor SSO"
+
+, ph.closed_code "Status"
+
+,ph.authorization_status "PO_Authorization_Status"
+,nvl(pl.quantity,0) "Quantity Ordered" 
+
+
+,nvl(pl.unit_price,pll.price_override) "Unit Price" 
+,ROUND((nvl(pd.quantity_ordered,0)*pll.Price_Override),2) "Line Amount" 
+
+,ROUND((case 
+when ph.currency_code = 'USD' then 
+(nvl(pd.quantity_ordered,0)*pll.Price_Override) 
+else 
+(select (nvl(pd.quantity_ordered,0)*pll.Price_Override)* 
+gdr.conversion_RATE 
+from apps.gl_daily_rates gdr 
+where to_char(trunc(gdr.CONVERSION_DATE), 'DD-MON-YYYY') = 
+to_char(ph.creation_date,'DD-MON-RRRR') 
+and upper(conversion_type) = upper('Corporate') 
+and FROM_CURRENCY = ph.currency_code 
+and TO_CURRENCY = 'USD') 
+end),2) "USD Line Amount" 
+
+,(nvl(pl.quantity,0)*pl.unit_price)"Total Amount"
+,to_char(fdt1.long_text) "OTST_Address"
+,(case when EXTRACTVALUE(XMLTYPE(fdt1.long_text),'/Adr/ET') is not null
+then EXTRACTVALUE(XMLTYPE(fdt1.long_text),'/Adr/ET')
+else 'Not Found' end) "TelePhone"
+--,dbms_lob.substr(fdt1.long_text, 4000,1) "OTST_Address"
+--,XMLTYPE(fdt1.long_text).EXTRACT('/Adr/EAS/EAL1/EC/ECT/ES/EZ/ECY/ET/text()') TEST 
+--,extract(XMLTYPE.CREATEXML(fdt1.long_text), '/Adr/EAS/EAL1/EC/ECT/ES/EZ/ECY/ET') test
+
+
+
+
+
+
+from  
+apps.po_requisition_headers_all prha, 
+apps.po_requisition_lines_all prla, 
+apps.po_req_distributions_all prda, 
+apps.po_headers_all ph, 
+apps.po_lines_all pl, 
+apps.po_line_locations_all pll, 
+apps.po_distributions_all pd, 
+apps.po_vendors pv, 
+apps.po_vendor_sites_all pvs, 
+apps.fnd_documents_long_text fdt1,
+apps.FND_ATTACHED_DOCS_FORM_VL fdt2,
+apps.per_all_people_f papf,
+apps.fnd_user fu
+
+ 
+where prha.requisition_header_id = prla.requisition_header_id 
+and prla.requisition_line_id=prda.requisition_line_id 
+and ph.po_header_id = pl.po_header_id 
+and pl.po_line_id=pll.po_line_id 
+and pll.line_location_id=pd.line_location_id 
+and pd.req_distribution_id=prda.distribution_id 
+and pv.vendor_id=pvs.vendor_id 
+and ph.vendor_id=pv.vendor_id 
+and ph.vendor_site_id=pvs.vendor_site_id 
+and ph.org_id=pvs.org_id 
+and prha.org_id=ph.org_id 
+and papf.person_id =pd.deliver_to_person_id
+and fu.user_id = ph.created_by
+--
+and fdt2.pk1_value = pll.Line_location_id
+and fdt2.pk2_value='ONE_TIME_LOCATION' 
+and fdt2.entity_name='PO_SHIPMENTS'
+and fdt1.media_id=fdt2.media_id
+--and ph.segment1 in ('11020410656')  
+and fdt2.function_name = 'PO_POXPOEPO' 
+and sysdate between papf.effective_start_date and papf.effective_end_date
+--AND PH.ORG_ID in ()
+and papf.employee_number in ('503256134',
+'503256142',
+'503256139',
+'503256138',
+'503156069')
+
+  
+   ORDER BY PH.SEGMENT1,
+    pl.line_num ;

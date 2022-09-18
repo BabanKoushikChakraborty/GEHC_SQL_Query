@@ -1,0 +1,25 @@
+Date for closing Required By Requestor>>>>
+
+=IFNA(VLOOKUP(F2,DNC!A:C,2,FALSE),"NA")
+
+Reason>>>>>>>>>>>>>>>>>>>>>
+
+=IFNA(VLOOKUP(F2,DNC!A:C,3,False),"NA")
+
+
+
+
+
+AUTO PO CLOSE VLOOKUPS>>>>>>>>>>>>>>>
+
+=NOT(ISNA(VLOOKUP(H318,POs!M:M,1,FALSE)))
+
+=VLOOKUP(J2,[Book1]PO!$K:$AH,2,FALSE) 
+
+
+
+
+
+Open PO User type BIOPHARMA or NON-BIOPHARMA VLOOKUP>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+=IFERROR(IF(VLOOKUP(O2,'[MONACO_OLIVIER_LIST.xlsx]Monaco EEs Details'!$A:$A,1,0)=O2,"Biopharma"),"Non Biopharma")

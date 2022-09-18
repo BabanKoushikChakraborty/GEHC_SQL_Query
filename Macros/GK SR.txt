@@ -1,0 +1,103 @@
+Sub Macro1()
+'
+' Macro1 Macro
+'
+
+'
+    ActiveSheet.Next.Select
+    ActiveSheet.Next.Select
+    Range("A1").Select
+    Range(Selection, ActiveCell.SpecialCells(xlLastCell)).Select
+    Selection.Copy
+    Application.CutCopyMode = False
+    Selection.Copy
+    Application.CutCopyMode = False
+    Selection.Copy
+    ActiveSheet.Previous.Select
+    Range("A1").Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    With Selection
+        .HorizontalAlignment = xlLeft
+        .VerticalAlignment = xlBottom
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Rows("1:1").Select
+    Selection.AutoFilter
+    With ActiveWindow
+        .SplitColumn = 0
+        .SplitRow = 1
+    End With
+    ActiveWindow.FreezePanes = True
+    Selection.Columns.AutoFit
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent1
+        .TintAndShade = 0.399975585192419
+        .PatternTintAndShade = 0
+    End With
+    Columns("C:C").Select
+    Selection.TextToColumns Destination:=Range("C1"), DataType:=xlDelimited, _
+        TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, Tab:=True, _
+        Semicolon:=False, Comma:=False, Space:=False, Other:=False, FieldInfo _
+        :=Array(1, 1), TrailingMinusNumbers:=True
+    Columns("E:E").Select
+    Selection.Insert Shift:=xlToRight
+    Range("E1").Select
+    ActiveCell.FormulaR1C1 = "Gatekeeper Cytiva or not"
+    Range("E2").Select
+    Columns("E:E").EntireColumn.AutoFit
+    Sheets("Sheet 3").Select
+    ActiveWindow.SelectedSheets.Delete
+    Cells.Select
+    Cells.EntireColumn.AutoFit
+    Range("G12").Select
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 3
+    ActiveWindow.ScrollColumn = 4
+    ActiveWindow.ScrollColumn = 5
+    ActiveWindow.ScrollColumn = 6
+    ActiveWindow.ScrollColumn = 7
+    ActiveWindow.ScrollColumn = 8
+    ActiveWindow.ScrollColumn = 9
+    ActiveWindow.ScrollColumn = 10
+    ActiveWindow.ScrollColumn = 11
+    ActiveWindow.ScrollColumn = 10
+    ActiveWindow.ScrollColumn = 9
+    Columns("K:K").ColumnWidth = 58.57
+    ActiveWindow.ScrollColumn = 10
+    ActiveWindow.ScrollColumn = 11
+    ActiveWindow.ScrollColumn = 12
+    ActiveWindow.ScrollColumn = 13
+    ActiveWindow.Zoom = 57
+    ActiveWindow.ScrollColumn = 12
+    ActiveWindow.ScrollColumn = 11
+    ActiveWindow.ScrollColumn = 10
+    ActiveWindow.ScrollColumn = 9
+    ActiveWindow.ScrollColumn = 8
+    ActiveWindow.ScrollColumn = 7
+    Columns("L:L").ColumnWidth = 64.14
+    ActiveWindow.ScrollColumn = 8
+    ActiveWindow.ScrollColumn = 7
+    ActiveWindow.ScrollColumn = 6
+    ActiveWindow.ScrollColumn = 5
+    ActiveWindow.ScrollColumn = 4
+    ActiveWindow.ScrollColumn = 3
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 1
+    ActiveWindow.Zoom = 60
+    ActiveWindow.Zoom = 70
+    ActiveWindow.Zoom = 80
+    ActiveWindow.Zoom = 90
+    ActiveWindow.Zoom = 100
+    Range("A2").Select
+    ActiveSheet.Previous.Select
+    Range("A1").Select
+End Sub
